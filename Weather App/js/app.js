@@ -1,9 +1,10 @@
-import { getMyLocation } from "./apiService.js"
+import { getMyLocation, getAnotherLocation, getWeatherForLocation } from "./apiService.js"
 document.addEventListener(`DOMContentLoaded`, function () {
     console.log('DOM fully parsed and loaded');
 
     const addCity = document.getElementById(`add-city`);
     const closeSearchingForm = document.getElementById(`search-close`);
+
     
 function baseFunctionalities() {
     // adding Searching module form

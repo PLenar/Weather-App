@@ -1,4 +1,4 @@
-
+export { getMyLocation, getAnotherLocation, getWeatherForLocation }
 async function getMyLocation() {
     try {
         let location = await fetch(`http://ip-api.com/json/`);
