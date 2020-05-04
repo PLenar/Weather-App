@@ -26,7 +26,9 @@ async function getWeatherForLocation(location) {
     try {
         let result = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.lat}&lon=${location.lon}&appid=${openWeatherMapApiKey}&units=metric`);
         result = await result.json();
+        console.log(result);
         let currentWeather = result.current;
+        let city = location.cityName;
         let today = {
             temperature: currentWeather.temp,
             pressure: currentWeather.pressure,
@@ -40,7 +42,7 @@ async function getWeatherForLocation(location) {
         let forecastFifthDay = result.daily[4];
         let forecastSixthDay = result.daily[5];
         let forecast = { forecastNextDay, forecastThirdDay, forecastFourthDay, forecastFifthDay, forecastSixthDay }
-        return { today, forecast }
+        return { today, forecast, city }
     } catch (error) {
         console.log(error);
     }

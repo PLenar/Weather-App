@@ -1,9 +1,3 @@
-.gitignore
-package-lock.json
-package.json
-.babelrc
-webpack.config.js
-
 # Logs
 logs
 *.log
