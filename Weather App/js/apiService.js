@@ -46,6 +46,5 @@ async function getWeatherForLocation(location) {
     }
 }
 
-getMyLocation()
-    .then((myLocation) => console.log(getWeatherForLocation(myLocation)));
+
 
