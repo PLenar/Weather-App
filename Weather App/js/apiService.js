@@ -1,7 +1,8 @@
 export { getMyLocation, getAnotherLocation, getWeatherForLocation }
 async function getMyLocation() {
     try {
-        let location = await fetch(`https://cors-anywhere.herokuapp.com/http://ip-api.com/json/`);
+        // https://cors-anywhere.herokuapp.com/ use if needed
+        let location = await fetch(`http://ip-api.com/json/`);
         location = await location.json();
         return { lat: location.lat, lon: location.lon, city: location.city }
     } catch (error) {
@@ -39,12 +40,11 @@ async function getWeatherForLocation(location) {
             description: currentWeather.weather[0].main
         }
         let forecastNextDay = result.daily[1];
-        console.log(forecastNextDay);
         let forecastThirdDay = result.daily[2];
         let forecastFourthDay = result.daily[3];
         let forecastFifthDay = result.daily[4];
         let forecastSixthDay = result.daily[5];
-        let forecast = [forecastNextDay, forecastThirdDay, forecastFourthDay, forecastFifthDay, forecastSixthDay] 
+        let forecast = [forecastNextDay, forecastThirdDay, forecastFourthDay, forecastFifthDay, forecastSixthDay]
         console.log(forecast);
         return { today, forecast, city }
     } catch (error) {
