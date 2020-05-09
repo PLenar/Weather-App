@@ -1,7 +1,7 @@
 export { getMyLocation, getAnotherLocation, getWeatherForLocation }
 async function getMyLocation() {
     try {
-        let location = await fetch(`http://ip-api.com/json/`);
+        let location = await fetch(`https://cors-anywhere.herokuapp.com/http://ip-api.com/json/`);
         location = await location.json();
         return { lat: location.lat, lon: location.lon, city: location.city }
     } catch (error) {
@@ -15,7 +15,8 @@ async function getAnotherLocation(city) {
         let response = await fetch(`https://graphhopper.com/api/1/geocode?key=${apiLocationKey}&q=${city}`);
         response = await response.json();
         response = response.hits[0];
-        return { lat: response.point.lat, lng: response.point.lng, cityName: response.name }
+        console.log(response);
+        return { lat: response.point.lat, lng: response.point.lng, city: response.name }
     } catch (error) {
         console.log(error);
     }
@@ -28,7 +29,8 @@ async function getWeatherForLocation(location) {
         result = await result.json();
         console.log(result);
         let currentWeather = result.current;
-        let city = location.cityName;
+        let city = location.city;
+        console.log(city);
         let today = {
             temperature: currentWeather.temp,
             pressure: currentWeather.pressure,
@@ -37,11 +39,13 @@ async function getWeatherForLocation(location) {
             description: currentWeather.weather[0].main
         }
         let forecastNextDay = result.daily[1];
+        console.log(forecastNextDay);
         let forecastThirdDay = result.daily[2];
         let forecastFourthDay = result.daily[3];
         let forecastFifthDay = result.daily[4];
         let forecastSixthDay = result.daily[5];
-        let forecast = { forecastNextDay, forecastThirdDay, forecastFourthDay, forecastFifthDay, forecastSixthDay }
+        let forecast = [forecastNextDay, forecastThirdDay, forecastFourthDay, forecastFifthDay, forecastSixthDay] 
+        console.log(forecast);
         return { today, forecast, city }
     } catch (error) {
         console.log(error);
