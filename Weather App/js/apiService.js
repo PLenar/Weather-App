@@ -2,7 +2,7 @@ export { getMyLocation, getAnotherLocation, getWeatherForLocation }
 async function getMyLocation() {
     try {
         // https://cors-anywhere.herokuapp.com/ use if needed
-        let location = await fetch(`http://ip-api.com/json/`);
+        let location = await fetch(`https://cors-anywhere.herokuapp.com/http://ip-api.com/json/`);
         location = await location.json();
         return { lat: location.lat, lon: location.lon, city: location.city }
     } catch (error) {

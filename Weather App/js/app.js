@@ -7,11 +7,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
     const $firstWeatherModule = document.querySelector(`.module__weather`);
     const $weatherForecast = document.querySelector(`.weather__forecast`).children;
     const $searchingModule = document.querySelector(`.module__form`);
-    const $searchingButton = document.querySelector(`form`);
+    const $searchingButton = document.getElementById(`searchingButton`);
     const $appContainer = document.getElementById(`app`);
-    console.log(document.getElementById(`search`).value);
+    const $searchBar = document.getElementById(`search`);
     const $nextWatherModule = $firstWeatherModule.cloneNode(true);
-    console.log($nextWatherModule);
     const $body = document.querySelector(`body`);
 
 
@@ -31,7 +30,13 @@ document.addEventListener(`DOMContentLoaded`, function () {
         $closeSearchingForm.addEventListener('click', function () {
             $searchingModule.toggleAttribute(`hidden`);
         })
-        addNewWeatherModule();
+
+        $searchingButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            addNewWeatherModule($searchBar.value);
+            $searchBar.value = "";
+        })
+
 
     }
 
@@ -72,15 +77,16 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-    function addNewWeatherModule() {
-        $searchingButton.addEventListener('submit', function (event) {
-            event.preventDefault()
-            if (event.target.search.value != '') {
-                $nextWatherModule.toggleAttribute('hidden');
-                $appContainer.appendChild($nextWatherModule);
-                console.log('DUPA DUPA DUPA DUPA DUPA DUPA', event.target.search.value);
-            }
-        })
+
+    function addNewWeatherModule(city) {
+        getAnotherLocation(city)
+            .then((location) => getWeatherForLocation(location))
+            .then((weather) => {
+                let nextWeatherModule = $firstWeatherModule.cloneNode(true);
+                document.getElementById("app").appendChild(nextWeatherModule);
+                return updateWeather(nextWeatherModule, weather);
+            })
+            .catch((error) => console.log(error));
     }
 
     baseFunctionalities();
