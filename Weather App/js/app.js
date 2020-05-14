@@ -2,42 +2,34 @@ import { getMyLocation, getAnotherLocation, getWeatherForLocation } from "./apiS
 document.addEventListener(`DOMContentLoaded`, function () {
     console.log('DOM fully parsed and loaded');
 
+    // DOM searching for important elements
     const $addCity = document.getElementById(`add-city`);
     const $closeSearchingForm = document.getElementById(`search-close`);
     const $firstWeatherModule = document.querySelector(`.module__weather`);
     const $weatherForecast = document.querySelector(`.weather__forecast`).children;
     const $searchingModule = document.querySelector(`.module__form`);
     const $searchingButton = document.getElementById(`searchingButton`);
-    const $appContainer = document.getElementById(`app`);
     const $searchBar = document.getElementById(`search`);
-    const $nextWatherModule = $firstWeatherModule.cloneNode(true);
-    const $body = document.querySelector(`body`);
 
-
-
+    // For dealing with dates in forecast
     const days = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek"];
-
     let date = new Date();
 
+    // To init base functionalities of weather app :)
     function baseFunctionalities() {
 
         $firstWeatherModule.toggleAttribute(`hidden`);
-        // adding Searching module form
         $addCity.addEventListener('click', function () {
             $searchingModule.toggleAttribute(`hidden`);
         });
-        // hiding Searching module form
         $closeSearchingForm.addEventListener('click', function () {
             $searchingModule.toggleAttribute(`hidden`);
         })
-
         $searchingButton.addEventListener("click", (event) => {
             event.preventDefault();
             addNewWeatherModule($searchBar.value);
             $searchBar.value = "";
         })
-
-
     }
 
     function updateWeather(module, weatherData) {
@@ -54,8 +46,41 @@ document.addEventListener(`DOMContentLoaded`, function () {
             const forecastIcon = weatherData.forecast[i].weather[0].main;
             $weatherForecast[i].children[1].src = getProperIcon(forecastIcon);
         }
+        //Closing added next weather module
+        let deleteButton = module.querySelector(".btn--close");
+        deleteButton.addEventListener("click", function () {
+            if (document.querySelectorAll("module__weather").length > 1) {
+                this.parentNode.remove();
+            }
+            else {
+                this.parentNode.toggleAttribute("hidden");
+            }
+        })
+        //Editing existing module to see weather in another city
     }
 
+    function addNewWeatherModule(city) {
+        getAnotherLocation(city)
+            .then((location) => getWeatherForLocation(location))
+            .then((weather) => {
+                let nextWeatherModule = $firstWeatherModule.cloneNode(true);
+                document.getElementById("app").appendChild(nextWeatherModule);
+                return updateWeather(nextWeatherModule, weather);
+            })
+            .catch((error) => console.log(error));
+    }
+
+    //For editing existing module
+    function changeWeather(city, module) {
+        getAnotherLocation(city)
+            .then((location) => getWeatherForLocation(location))
+            .then((weather) => {
+                return updateWeather(module, weather);
+            })
+            .catch((error) => console.log(error));
+    }
+
+    //To handle with icons provided by CodersLab
     function getProperIcon(mainWeather) {
         switch (mainWeather) {
             case 'Thunderstorm':
@@ -77,21 +102,10 @@ document.addEventListener(`DOMContentLoaded`, function () {
         }
     }
 
-
-    function addNewWeatherModule(city) {
-        getAnotherLocation(city)
-            .then((location) => getWeatherForLocation(location))
-            .then((weather) => {
-                let nextWeatherModule = $firstWeatherModule.cloneNode(true);
-                document.getElementById("app").appendChild(nextWeatherModule);
-                return updateWeather(nextWeatherModule, weather);
-            })
-            .catch((error) => console.log(error));
-    }
-
     baseFunctionalities();
     getMyLocation()
         .then(location => getWeatherForLocation(location))
-        .then(weather => updateWeather($firstWeatherModule, weather));
+        .then(weather => updateWeather($firstWeatherModule, weather))
+        .catch((error) => console.log(error));
 
 })

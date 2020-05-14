@@ -1,10 +1,13 @@
 export { getMyLocation, getAnotherLocation, getWeatherForLocation }
+
+//Sometimes occurs problem even if CORS-anywhere used
 async function getMyLocation() {
     try {
         // https://cors-anywhere.herokuapp.com/ use if needed
         let location = await fetch(`https://cors-anywhere.herokuapp.com/http://ip-api.com/json/`);
         location = await location.json();
-        return { lat: location.lat, lon: location.lon, city: location.city }
+        console.log(location);
+        return { lat: location.lat, lng: location.lon, city: location.city }
     } catch (error) {
         console.log(error);
     }
@@ -26,7 +29,7 @@ async function getAnotherLocation(city) {
 async function getWeatherForLocation(location) {
     const openWeatherMapApiKey = `65df6e65685954bcc25e210809d56fc4`;
     try {
-        let result = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.lat}&lon=${location.lon}&appid=${openWeatherMapApiKey}&units=metric`);
+        let result = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${location.lat}&lon=${location.lng}&appid=${openWeatherMapApiKey}&units=metric`);
         result = await result.json();
         console.log(result);
         let currentWeather = result.current;
